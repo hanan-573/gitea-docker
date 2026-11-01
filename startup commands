@@ -1,0 +1,13 @@
+cd ~/gitea-docker
+
+docker compose up -d
+
+
+stop krnay ky liye: 
+docker compose down
+
+status check krnay ky liye:
+docker compose ps
+
+logs daikhnay ky liye:
+docker compose logs -f

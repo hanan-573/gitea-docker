@@ -1,0 +1,46 @@
+services:
+  caddy:
+    image: caddy:latest
+    container_name: gitea-caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy-data:/data
+      - ./caddy-config:/config
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    networks:
+      - gitea-net
+    depends_on:
+      - gitea
+
+  gitea:
+    image: gitea/gitea:latest
+    container_name: git
+    restart: always
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__server__DOMAIN=git.mughalkhan1.online
+      - GITEA__server__SSH_DOMAIN=git.mughalkhan1.online
+      - GITEA__server__ROOT_URL=https://git.mughalkhan1.online/
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__SSH_PORT=13002
+      - GITEA__server__SSH_LISTEN_PORT=22
+    volumes:
+      - ./gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "13000:3000"
+      - "13002:22"
+    networks:
+      - gitea-net
+
+networks:
+  gitea-net:
+    external: true
